@@ -3,18 +3,43 @@ package main
 import "fmt"
 
 func main() {
-	const USDtoEUR = 0.91 * 1
-	const USDtoRUB = 96.20 * 1
-	const EURtoRUB = USDtoEUR * USDtoRUB
-	getUserInput()
+	userCurrency, amount, exchangeCurrency := getUserInput()
+	fmt.Println(userCurrency, amount, exchangeCurrency)
+	result := calculateCurrency(userCurrency, amount, exchangeCurrency)
+	fmt.Printf("Результат обмена: %v", result)
 }
 
-func getUserInput() {
-	var currency string
-	fmt.Scan(&currency)
-	fmt.Println(currency)
+func getUserInput() (string, float64, string) {
+	var userCurrency string
+	fmt.Println("Введите валюту, которую хотите обменять (usd/eur/rub): ")
+	fmt.Scan(&userCurrency)
+
+	var amount float64
+	fmt.Println("Введите сумму: ")
+	fmt.Scan(&amount)
+
+	var exchangeCurrency string
+	fmt.Println("Введите валюту, которую хотите получить: ")
+	fmt.Scan(&exchangeCurrency)
+
+	return userCurrency, amount, exchangeCurrency
+
 }
 
-func calculateCurrency(amount float64, currency1 string, currency2 string) float64 {
-
+func calculateCurrency(userCurrency string, amount float64, exchangeCurrency string) float64 {
+	var result float64
+	if userCurrency == "usd" && exchangeCurrency == "rub" {
+		result = amount * 97.40
+	} else if userCurrency == "usd" && exchangeCurrency == "eur" {
+		result = amount * 0.91
+	} else if userCurrency == "eur" && exchangeCurrency == "rub" {
+		result = amount * 105.45
+	} else if userCurrency == "eur" && exchangeCurrency == "usd" {
+		result = amount * 1.08
+	} else if userCurrency == "rub" && exchangeCurrency == "usd" {
+		result = amount * 0.010
+	} else if userCurrency == "rub" && exchangeCurrency == "eur" {
+		result = amount * 0.0095
+	}
+	return result
 }
