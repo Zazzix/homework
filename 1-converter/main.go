@@ -1,28 +1,72 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main() {
 	userCurrency, amount, exchangeCurrency := getUserInput()
 	fmt.Println(userCurrency, amount, exchangeCurrency)
 	result := calculateCurrency(userCurrency, amount, exchangeCurrency)
-	fmt.Printf("Результат обмена: %v", result)
+	fmt.Printf("Результат обмена: %v\n", result)
 }
 
 func getUserInput() (string, float64, string) {
 	var userCurrency string
-	fmt.Println("Введите валюту, которую хотите обменять (usd/eur/rub): ")
+	fmt.Print("Введите валюту, которую хотите обменять (usd/eur/rub): ")
 	fmt.Scan(&userCurrency)
+	for {
+		if userCurrency == "usd" || userCurrency == "eur" || userCurrency == "rub" {
+			break
+		} else {
+			fmt.Print("Введите валюту, которую хотите обменять (usd/eur/rub): ")
+			fmt.Scan(&userCurrency)
+		}
+	}
 
-	var amount float64
-	fmt.Println("Введите сумму: ")
+	var amount string
+	fmt.Print("Введите сумму: ")
 	fmt.Scan(&amount)
+	var userAmount float64
+	for {
+		userAmount, _ = strconv.ParseFloat(amount, 64)
+		if userAmount > 0 {
+			break
+		} else {
+			fmt.Print("Введите сумму: ")
+			fmt.Scan(&amount)
+		}
+	}
 
 	var exchangeCurrency string
-	fmt.Println("Введите валюту, которую хотите получить: ")
-	fmt.Scan(&exchangeCurrency)
+	switch userCurrency {
+	case "usd":
+		fmt.Print("Введите валюту, которую хотите получить (eur/rub): ")
+		fmt.Scan(&exchangeCurrency)
+	case "eur":
+		fmt.Print("Введите валюту, которую хотите получить (usd/rub): ")
+		fmt.Scan(&exchangeCurrency)
+	case "rub":
+		fmt.Print("Введите валюту, которую хотите получить (usd/eur): ")
+		fmt.Scan(&exchangeCurrency)
+	}
 
-	return userCurrency, amount, exchangeCurrency
+	for {
+		if exchangeCurrency == userCurrency {
+			fmt.Printf("Вы не можете обменять %v на %v. Выберите другую валюту: ", userCurrency, exchangeCurrency)
+			fmt.Scan(&exchangeCurrency)
+		} else {
+			if exchangeCurrency == "usd" || exchangeCurrency == "eur" || exchangeCurrency == "rub" {
+				break
+			} else {
+				fmt.Print("Введите валюту, которую хотите получить: ")
+				fmt.Scan(&exchangeCurrency)
+			}
+		}
+	}
+
+	return userCurrency, userAmount, exchangeCurrency
 
 }
 
