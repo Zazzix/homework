@@ -6,9 +6,23 @@ import (
 )
 
 func main() {
+	currencies := map[string]map[string]float64{
+		"EUR": {
+			"USD": 1.08,
+			"RUB": 105.45,
+		},
+		"USD": {
+			"EUR": 0.91,
+			"RUB": 97.40,
+		},
+		"RUB": {
+			"EUR": 0.0095,
+			"USD": 0.010,
+		},
+	}
 	userCurrency, amount, exchangeCurrency := getUserInput()
 	fmt.Println(userCurrency, amount, exchangeCurrency)
-	result := calculateCurrency(userCurrency, amount, exchangeCurrency)
+	result := calculateCurrency(userCurrency, amount, exchangeCurrency, &currencies)
 	fmt.Printf("Результат обмена: %v\n", result)
 }
 
@@ -70,20 +84,20 @@ func getUserInput() (string, float64, string) {
 
 }
 
-func calculateCurrency(userCurrency string, amount float64, exchangeCurrency string) float64 {
+func calculateCurrency(userCurrency string, amount float64, exchangeCurrency string, currencies *map[string]map[string]float64) float64 {
 	var result float64
 	if userCurrency == "usd" && exchangeCurrency == "rub" {
-		result = amount * 97.40
+		result = amount * (*currencies)["USD"]["RUB"]
 	} else if userCurrency == "usd" && exchangeCurrency == "eur" {
-		result = amount * 0.91
+		result = amount * (*currencies)["USD"]["EUR"]
 	} else if userCurrency == "eur" && exchangeCurrency == "rub" {
-		result = amount * 105.45
+		result = amount * (*currencies)["EUR"]["RUB"]
 	} else if userCurrency == "eur" && exchangeCurrency == "usd" {
-		result = amount * 1.08
+		result = amount * (*currencies)["EUR"]["USD"]
 	} else if userCurrency == "rub" && exchangeCurrency == "usd" {
-		result = amount * 0.010
+		result = amount * (*currencies)["RUB"]["USD"]
 	} else if userCurrency == "rub" && exchangeCurrency == "eur" {
-		result = amount * 0.0095
+		result = amount * (*currencies)["RUB"]["EUR"]
 	}
 	return result
 }
