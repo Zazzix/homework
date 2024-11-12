@@ -41,14 +41,12 @@ func createNewBin(binName string) (*Bin, error) {
 	if binName == "" {
 		return nil, errors.New("INVALID_BIN_NAME")
 	}
-	newBin := &Bin{
+	return &Bin{
 		id:        "123",
 		private:   false,
 		createdAt: time.Now(),
 		name:      binName,
-	}
-
-	return newBin, nil
+	}, nil
 
 }
 
@@ -56,9 +54,8 @@ func addToBinList(bin *Bin) *BinList {
 	binlist := make([]Bin, 0, 1)
 	binlist = append(binlist, *bin)
 
-	newList := &BinList{
-		Bins: binlist,
-	}
+	newList := &BinList{}
+	newList.Bins = binlist
 	return newList
 
 }
