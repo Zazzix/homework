@@ -17,40 +17,55 @@ type BinList struct {
 	Bins []Bin
 }
 
-func (binlist *BinList) addBin(bin *Bin) {
-	binlist.Bins = append(binlist.Bins, *bin)
-
+func (b *BinList) printBinList() {
+	fmt.Println(b.Bins)
 }
 
-func createNewBin(BinName string) (*Bin, error) {
-	if BinName == "" {
-		return nil, errors.New("INVALID_BIN_NAME")
-	}
-	mockBin := &Bin{
-		id:        "123",      // временно
-		private:   false,      // временно
-		createdAt: time.Now(), // временно
-		name:      BinName,
-	}
-
-	return mockBin, nil
+func (b *Bin) printBin() {
+	fmt.Println(b.id, b.private, b.createdAt, b.name)
 }
 
 func main() {
-	BinName := BinName("Введите название BIN")
-
-	mockBin, err := createNewBin(BinName)
+	binName := getBinName("Введите название Bin")
+	newBin, err := createNewBin(binName)
 	if err != nil {
-		fmt.Println("Нет имени BIN")
+		fmt.Println("Пустое название Bin")
+		return
+	}
+	newList := addToBinList(newBin)
+	newList.printBinList()
+	newBin.printBin()
+}
+
+func createNewBin(binName string) (*Bin, error) {
+	if binName == "" {
+		return nil, errors.New("INVALID_BIN_NAME")
+	}
+	newBin := &Bin{
+		id:        "123",
+		private:   false,
+		createdAt: time.Now(),
+		name:      binName,
 	}
 
-	fmt.Print(mockBin)
+	return newBin, nil
 
 }
 
-func BinName(prompt string) string {
-	var BinName string
+func addToBinList(bin *Bin) *BinList {
+	binlist := make([]Bin, 0, 1)
+	binlist = append(binlist, *bin)
+
+	newList := &BinList{
+		Bins: binlist,
+	}
+	return newList
+
+}
+
+func getBinName(prompt string) string {
+	var binName string
 	fmt.Print(prompt + ": ")
-	fmt.Scanln(&BinName)
-	return BinName
+	fmt.Scanln(&binName)
+	return binName
 }
